@@ -1,3 +1,4 @@
+import { Share } from "react-native";
 import {
   View,
   Text,
@@ -10,7 +11,6 @@ import {
 
 const SummaryScreen = ({ route }) => {
   const { people, dishes, tax, groupName } = route.params;
-
   // Split logic
   const personTotals = {};
 
@@ -30,20 +30,43 @@ const SummaryScreen = ({ route }) => {
   if (tax > 0 && people.length > 0) {
     const taxShare = tax / people.length;
     people.forEach((person) => {
-      personTotals[person].total += taxShare;
+      if (personTotals[person].total != 0)
+        personTotals[person].total += taxShare;
     });
   }
 
-  const summaryLines = people.map((person) => {
-    const info = personTotals[person];
-    return `${person} owes ₹${info.total.toFixed(2)} for: ${[
-      ...new Set(info.dishes),
-    ].join(", ")}`;
-  });
+  const summaryLines = Object.entries(personTotals)
+    .filter(([_, info]) => info.total > 0 || info.dishes.length > 0)
+    .map(([person, info]) => {
+      return `${person} owes ₹${info.total.toFixed(2)} for: ${[
+        ...new Set(info.dishes),
+      ].join(", ")}`;
+    });
 
   const handleCopy = () => {
     Clipboard.setString(summaryLines.join("\n"));
     Alert.alert("Copied", "Summary copied to clipboard!");
+  };
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: summaryLines.join("\n"),
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // Shared with activity type of result.activityType
+        } else {
+          // Shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // Dismissed
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to share summary.");
+      console.error(error);
+    }
   };
 
   return (
@@ -58,6 +81,9 @@ const SummaryScreen = ({ route }) => {
 
       <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
         <Text style={styles.copyButtonText}>Copy Summary</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.copyButton} onPress={handleShare}>
+        <Text style={styles.copyButtonText}>Share Summary</Text>
       </TouchableOpacity>
     </ScrollView>
   );

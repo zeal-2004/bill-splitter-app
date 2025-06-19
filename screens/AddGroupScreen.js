@@ -26,7 +26,12 @@ const AddGroupScreen = ({ route, navigation }) => {
 
   const handleAddPerson = () => {
     if (!newPerson.trim()) {
-      Alert.alert("Invalid input", "Name cannot be empty");
+      Alert.alert("Invalid input", "Name cannot be empty.");
+      return;
+    }
+
+    if (people.includes(newPerson.trim())) {
+      Alert.alert("Duplicate entry", "Person already added.");
       return;
     }
 
@@ -58,6 +63,10 @@ const AddGroupScreen = ({ route, navigation }) => {
       );
       return;
     }
+    if (dishPrice <= 0) {
+      Alert.alert("Invalid Price", "Please enter a valid price amount.");
+      return;
+    }
 
     const newDish = {
       name: dishName.trim(),
@@ -85,6 +94,11 @@ const AddGroupScreen = ({ route, navigation }) => {
         "No Dishes Added",
         "Please add at least one dish to proceed."
       );
+      return;
+    }
+
+    if (tax < 0) {
+      Alert.alert("Invalid Tax/Tip", "Please enter a valid tax/tip amount.");
       return;
     }
 
