@@ -27,6 +27,18 @@
     },
     "plugins": [
       "expo-web-browser"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "876617d3-e8dc-4537-afc1-e0242554e9df"
+      }
+    },
+    "owner": "tejaswini2004",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/876617d3-e8dc-4537-afc1-e0242554e9df"
+    }
   }
 }
