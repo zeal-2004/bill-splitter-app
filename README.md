@@ -21,10 +21,13 @@
 ---
 
 ## 📸 Screenshots
-![Home Screen](./screenshots/HomeScreen.png)
-![Group Screen - 1](./screenshots/GroupScreen_1.png)
-![Group Screen - 2](./screenshots/GroupScreen_2.png)
-![Summary Screen](./screenshots/SummaryScreen.png)
+
+<p align="center">
+  <img src="./screenshots/HomeScreen.png" alt="Home Screen" width="150"/>
+  <img src="./screenshots/GroupScreen_1.png" alt="Group Screen - 1" width="150"/>
+  <img src="./screenshots/GroupScreen_2.png" alt="Group Screen - 2" width="150"/>
+  <img src="./screenshots/SummaryScreen.png" alt="Summary Screen" width="150"/>
+</p>
 ---
 
 ## 🛠️ Tech Stack
