@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -10,7 +11,7 @@ import {
 } from "react-native";
 
 const AddGroupScreen = ({ route, navigation }) => {
-  const { groupName } = route.params;
+  const { groupName, groupData, isExistingGroup } = route.params || {};
 
   const [people, setPeople] = useState([]);
   const [newPerson, setNewPerson] = useState("");
@@ -43,7 +44,6 @@ const AddGroupScreen = ({ route, navigation }) => {
     } else {
       setPeople([...people, newPerson.trim()]);
     }
-
     setNewPerson("");
   };
 
@@ -88,7 +88,7 @@ const AddGroupScreen = ({ route, navigation }) => {
     setSelectedPeople([]);
   };
 
-  const handleGenerateSplit = () => {
+  const handleGenerateSplit = async () => {
     if (dishes.length === 0) {
       Alert.alert(
         "No Dishes Added",
@@ -108,6 +108,18 @@ const AddGroupScreen = ({ route, navigation }) => {
       tax: parseFloat(tax) || 0,
       groupName,
     });
+
+    await AsyncStorage.setItem(
+      groupName,
+      JSON.stringify({
+        people,
+        dishes,
+        tax,
+        lastUpdated: new Date().toISOString(),
+      })
+    );
+    const values = await AsyncStorage.getItem(groupName);
+    const value = JSON.parse(values);
   };
 
   const promptEditOrDeletePerson = (index) => {
@@ -167,6 +179,14 @@ const AddGroupScreen = ({ route, navigation }) => {
       ]
     );
   };
+
+  useEffect(() => {
+    if (isExistingGroup && groupData) {
+      setPeople(groupData.people || []);
+      setDishes(groupData.dishes || []);
+      setTax(groupData.tax || 0);
+    }
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

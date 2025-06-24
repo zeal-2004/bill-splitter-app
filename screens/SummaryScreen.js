@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Clipboard,
   Alert,
 } from "react-native";
 
@@ -38,20 +37,14 @@ const SummaryScreen = ({ route }) => {
   const summaryLines = Object.entries(personTotals)
     .filter(([_, info]) => info.total > 0 || info.dishes.length > 0)
     .map(([person, info]) => {
-      return `${person} owes ₹${info.total.toFixed(2)} for: ${[
-        ...new Set(info.dishes),
-      ].join(", ")}`;
+      const dishList = [...new Set(info.dishes)].join(", ");
+      return `${person}\nOwes: ₹${info.total.toFixed(2)}\nShared: ${dishList}`;
     });
-
-  const handleCopy = () => {
-    Clipboard.setString(summaryLines.join("\n"));
-    Alert.alert("Copied", "Summary copied to clipboard!");
-  };
 
   const handleShare = async () => {
     try {
       const result = await Share.share({
-        message: summaryLines.join("\n"),
+        message: groupName + "\n\n" + summaryLines.join("\n\n"),
       });
 
       if (result.action === Share.sharedAction) {
@@ -79,9 +72,6 @@ const SummaryScreen = ({ route }) => {
         </View>
       ))}
 
-      <TouchableOpacity style={styles.copyButton} onPress={handleCopy}>
-        <Text style={styles.copyButtonText}>Copy Summary</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.copyButton} onPress={handleShare}>
         <Text style={styles.copyButtonText}>Share Summary</Text>
       </TouchableOpacity>
@@ -123,5 +113,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 16,
+  },
+  summaryCard: {
+    padding: 12,
+    marginBottom: 10,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  personName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  amount: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#007B55",
+    marginVertical: 4,
+  },
+  dishStyle: {
+    fontSize: 14,
+    color: "#555",
+    fontStyle: "italic",
   },
 });
