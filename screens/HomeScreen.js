@@ -32,7 +32,6 @@ const HomeScreen = ({ navigation }) => {
       navigation.navigate("Group", { groupName });
       setGroupName("");
     }
-    console.log(displayGroup, groupName);
   };
 
   const fetchGroupNames = async () => {
@@ -84,9 +83,7 @@ const HomeScreen = ({ navigation }) => {
             try {
               await AsyncStorage.removeItem(groupName); // delete from AsyncStorage
               await fetchGroupNames(); // refresh the list
-              console.log(`Deleted ${groupName}`);
             } catch (error) {
-              console.log("Failed to delete:", error);
             }
           },
         },

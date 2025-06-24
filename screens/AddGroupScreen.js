@@ -41,6 +41,13 @@ const AddGroupScreen = ({ route, navigation }) => {
       updatedPeople[editingPersonIndex] = newPerson.trim();
       setPeople(updatedPeople);
       setEditingPersonIndex(null);
+      for (let i = 0; i < dishes.length; i++) {
+        for (let j = 0; j < dishes[i].sharedBy.length; j++) {
+          if (dishes[i].sharedBy[j] === people[editingPersonIndex]) {
+            dishes[i].sharedBy[j] = updatedPeople[editingPersonIndex];
+          }
+        }
+      }
     } else {
       setPeople([...people, newPerson.trim()]);
     }
@@ -137,11 +144,25 @@ const AddGroupScreen = ({ route, navigation }) => {
         {
           text: "Delete",
           onPress: () => {
+            const personToDelete = people[index];
+
+            const isTagged = dishes.some((dish) =>
+              dish.sharedBy.includes(personToDelete)
+            );
+
+            if (isTagged) {
+              Alert.alert(
+                "Cannot Delete",
+                `${personToDelete} is tagged in one or more dishes.`
+              );
+              return;
+            }
+
             const updated = [...people];
             updated.splice(index, 1);
             setPeople(updated);
             setSelectedPeople(
-              selectedPeople.filter((p) => p !== people[index])
+              selectedPeople.filter((p) => p !== personToDelete)
             );
           },
           style: "destructive",
@@ -190,7 +211,7 @@ const AddGroupScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Group: {groupName}</Text>
+      <Text style={styles.title}>{groupName}</Text>
 
       {/* Add Person */}
       <View style={styles.inputRow}>
