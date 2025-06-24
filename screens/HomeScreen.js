@@ -127,7 +127,7 @@ const HomeScreen = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Start Splitting</Text>
       </TouchableOpacity>
-      <Text style={styles.savedGroupsTitle}>Saved Groups:</Text>
+      {displayGroup.length > 0 && (<Text style={styles.savedGroupsTitle}>Saved Groups:</Text>)}
       <FlatList
         data={displayGroup}
         keyExtractor={(item) => item}
