@@ -83,8 +83,7 @@ const HomeScreen = ({ navigation }) => {
             try {
               await AsyncStorage.removeItem(groupName); // delete from AsyncStorage
               await fetchGroupNames(); // refresh the list
-            } catch (error) {
-            }
+            } catch (error) {}
           },
         },
         {
@@ -117,7 +116,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/favicon.png")} // make sure you have a logo.png
+        source={require("../assets/logo.png")} // make sure you have a logo.png
         style={styles.logo}
         resizeMode="contain"
       />
